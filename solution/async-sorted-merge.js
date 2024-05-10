@@ -57,6 +57,8 @@ const initializeFunnel = async (logSources) => {
     })
   }
 
+  // After we've grabbed the first entry from each source, we want to do one big
+  // initial sort of the data.
   return entries.sort((a, b) => {
     return a.data.date - b.data.date
   })
@@ -95,10 +97,11 @@ module.exports = async (logSources, printer) => {
   }
   // ------------------------------------------------------------------------
 
-  
+
   let funnel = await initializeFunnel(logSources)
   await processEntries(funnel, logSources)
 
+  // Get dem stats
   printer.done()
   console.log("Async sort complete.")
 };

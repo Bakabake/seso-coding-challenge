@@ -6,7 +6,7 @@
  * is sorted into the funnel.  Uses binary insertion sort.
  * Modifies the original array.
  * 
- * @param {Object} log 
+ * @param {Object} entry 
  *  The log entry to be added.
  *  Contains the source index and payload of the most recent entry 
  *  from that source.
@@ -14,7 +14,7 @@
  * @param {Array} funnel 
  *  The array containing entries from every source.
  */
-const addSourceEntryToFunnel = (log, funnel) => {
+const addSourceEntryToFunnel = (entry, funnel) => {
   let start = 0
   let end = funnel.length - 1
   let mid = undefined
@@ -22,10 +22,10 @@ const addSourceEntryToFunnel = (log, funnel) => {
   while (start <= end) {
     mid = (start + end) >> 1
     // Which half is it in?
-    if (log.data.date < funnel[mid].data.date) {
+    if (entry.data.date < funnel[mid].data.date) {
       // The 'before' half.
       end = mid - 1
-    } else if (log.data.date > funnel[mid].data.date) {
+    } else if (entry.data.date > funnel[mid].data.date) {
       // The 'after' half.
       start = mid + 1
     } else {
@@ -35,7 +35,7 @@ const addSourceEntryToFunnel = (log, funnel) => {
     }
   }
 
-  funnel.splice(start, 0, log)
+  funnel.splice(start, 0, entry)
 }
 
 
