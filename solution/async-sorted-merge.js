@@ -141,8 +141,6 @@ class LogSorter {
       this.lastBucketUsedBySource.set(index, 0)
     })
 
-    //console.dir(this.lastBucketUsedBySource, {depth:null})
-
     this.reader.on('data', this.onData.bind(this))
     this.reader.on('drained', this.onDrained.bind(this))
   }
@@ -204,11 +202,15 @@ class LogSorter {
   dateToBucketId(date) {
     let d = new Date(date)
 
-    // 0-pad Month and Day
+    // When dealing with large source sets, you'll need to make more
+    //  granular buckets, lest you blow out the heap.  
+    // Don't forget to 0-pad!
     let YYYY = d.getUTCFullYear()
     let MM = (d.getUTCMonth() + 1).toString().padStart(2, '0')
     let DD = d.getUTCDate().toString().padStart(2, '0')
-    
+    // let hh = d.getUTCHours().toString().padStart(2, '0')
+    // let mm = d.getUTCMinutes().toString().padStart(2, '0')
+
     return Number(`${YYYY}${MM}${DD}`)
   }
 
@@ -249,7 +251,7 @@ class LogSorter {
 
     return [...this.timeBuckets.keys()].filter((bucketId) => {
       return bucketId < earliestDate
-    })
+    }).sort()
   }
 
   /**
