@@ -135,6 +135,14 @@ class LogSorter {
     this.reader = reader
     this.printer = printer
 
+    // Ensure our lastBucketUsedBySource map has one entry for each source,
+    // Otherwise, we may think a bucket is done when it is not.
+    this.reader.sources.forEach((source, index) => {
+      this.lastBucketUsedBySource.set(index, 0)
+    })
+
+    //console.dir(this.lastBucketUsedBySource, {depth:null})
+
     this.reader.on('data', this.onData.bind(this))
     this.reader.on('drained', this.onDrained.bind(this))
   }
@@ -200,7 +208,7 @@ class LogSorter {
     let YYYY = d.getUTCFullYear()
     let MM = (d.getUTCMonth() + 1).toString().padStart(2, '0')
     let DD = d.getUTCDate().toString().padStart(2, '0')
-
+    
     return Number(`${YYYY}${MM}${DD}`)
   }
 
